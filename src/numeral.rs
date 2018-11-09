@@ -2,6 +2,7 @@ use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::ops;
 use crate::{Result, Error};
 
+/// Representation of a roman numeral
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Numeral {
     I,
@@ -14,8 +15,20 @@ pub enum Numeral {
 }
 
 impl Numeral {
-    pub fn from_int<T: Into<u64>>(num: T) -> Result<Numeral> {
-        let num: u64 = num.into();
+    /// Tries to converts a value that implements `Into<u32>` into a single roman numeral
+    ///
+    /// # Examples
+    /// ```rust
+    /// # use septem::prelude::*;
+    /// # use septem::*;
+    ///
+    /// let v: Numeral = Numeral::from_int(5u8).unwrap();
+    /// assert_eq!(Numeral::V, v);
+    /// ```
+    ///
+    /// Returns `Numeral` , or an `septem::Error`
+    pub fn from_int<T: Into<u32>>(num: T) -> Result<Numeral> {
+        let num: u32 = num.into();
         use self::Numeral::*;
         match num {
             1 => Ok(I),
@@ -31,6 +44,18 @@ impl Numeral {
 }
 
 impl Numeral {
+    /// Tries to converts a char into a single roman numeral
+    ///
+    /// # Examples
+    /// ```rust
+    /// # use septem::prelude::*;
+    /// # use septem::*;
+    ///
+    /// let v: Numeral = Numeral::from_char('v').unwrap();
+    /// assert_eq!(Numeral::V, v);
+    /// ```
+    ///
+    /// Returns `Numeral` , or an `septem::Error`
     pub fn from_char(c: char) -> Result<Numeral> {
         use self::Numeral::*;
         match c.to_uppercase().next() {
@@ -50,21 +75,14 @@ unsafe impl Send for Numeral {}
 unsafe impl Sync for Numeral {}
 
 impl From<Numeral> for u32 {
+    /// Converts from Numeral to u32
     fn from(numeral: Numeral) -> u32 {
-        use self::Numeral::*;
-        match numeral {
-            I => 1,
-            V => 5,
-            X => 10,
-            L => 50,
-            C => 100,
-            D => 500,
-            M => 1000
-        }
+        *numeral
     }
 }
 
 impl From<&Numeral> for char {
+    /// Converts from &Numeral to char
     fn from(numeral: &Numeral) -> char {
         use self::Numeral::*;
         match *numeral {
@@ -88,6 +106,7 @@ impl Display for Numeral {
 impl ops::Deref for Numeral {
     type Target = u32;
 
+    /// Returns from &Numeral to u32
     fn deref(&self) -> &u32 {
         use self::Numeral::*;
         match *self {

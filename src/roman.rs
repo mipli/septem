@@ -4,6 +4,9 @@ use std::{ops, str};
 
 use crate::{Numeral, Result, Error};
 
+/// A Roman number
+///
+/// Stores the value internally as a vector of Roman Numerals, and as a u32, to optimize usage.
 #[derive(Debug, Clone)]
 pub struct Roman {
     numerals: Vec<Numeral>,
@@ -11,14 +14,19 @@ pub struct Roman {
 }
 
 impl Roman {
-    pub fn numerals(&self) -> &Vec<Numeral> {
-        &self.numerals
-    }
-
-    pub fn iter(&self) -> impl Iterator<Item = &Numeral> {
-        self.numerals.iter()
-    }
-
+    /// Creates a Roman numeral for any value that implements `Into<u32>`. Requires value to be
+    /// greater than 0, and less than 4000.
+    ///
+    /// # Examples
+    /// ```rust
+    /// # use septem::prelude::*;
+    /// # use septem::*;
+    ///
+    /// let sept: Roman = Roman::from(7u32).unwrap();
+    /// assert_eq!("VII", sept.to_string());
+    /// ```
+    ///
+    /// Returns `Roman` , or an `septem::Error`
     pub fn from<T: Into<u32>>(val: T) -> Result<Self> {
         let val = val.into();
         if val == 0 || val > 3999 {
@@ -27,6 +35,19 @@ impl Roman {
         Ok(Roman::from_unchecked(val))
     }
 
+    /// Creates a Roman numeral for any value that implements `Into<u32>`. Does not to any range
+    /// checking, so can result in weird numerals.
+    ///
+    /// # Examples
+    /// ```rust
+    /// # use septem::prelude::*;
+    /// # use septem::*;
+    ///
+    /// let sept: Roman = Roman::from_unchecked(5032u32);
+    /// assert_eq!("MMMMMXXXII", sept.to_string());
+    /// ```
+    ///
+    /// Returns `Roman`
     pub fn from_unchecked<T: Into<u32>>(val: T) -> Self {
         let val = val.into();
         if val == 0 {
@@ -83,9 +104,21 @@ impl Roman {
         numerals
     }
 
+    /// Returns lowercase string representation of the Roman numeral
     pub fn to_lowercase(&self) -> String {
         self.to_string().to_lowercase()
     }
+
+    /// Returns the vector of Numerals representing the Roman numeral
+    pub fn numerals(&self) -> &Vec<Numeral> {
+        &self.numerals
+    }
+
+    /// Returns an iterator over the Numerals representing the Roman numeral
+    pub fn iter(&self) -> impl Iterator<Item = &Numeral> {
+        self.numerals.iter()
+    }
+
 }
 
 unsafe impl Send for Roman {}
@@ -94,6 +127,7 @@ unsafe impl Sync for Roman {}
 impl ops::Deref for Roman {
     type Target = u32;
 
+    /// Returns the integer representation of the Roman numeral
     fn deref(&self) -> &u32 {
         &self.value
     }
@@ -102,6 +136,18 @@ impl ops::Deref for Roman {
 impl str::FromStr for Roman {
     type Err = Error;
 
+    /// Creates a Roman numeral from a string representing the roman numerals
+    ///
+    /// # Examples
+    /// ```rust
+    /// # use septem::prelude::*;
+    /// # use septem::*;
+    ///
+    /// let sept: Roman = "VII".parse().unwrap();
+    /// assert_eq!(7, *sept);
+    /// ```
+    ///
+    /// Returns `Roman` , or an `septem::Error`
     fn from_str(s: &str) -> std::result::Result<Self, Error> {
         use std::cmp::Ordering::{Equal, Less, Greater};
         struct Accumulator {

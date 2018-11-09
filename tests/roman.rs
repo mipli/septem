@@ -15,6 +15,15 @@ mod tests {
     }
 
     #[test]
+    fn from_unchecked() {
+        use self::Numeral::*;
+
+        let r = Roman::from_unchecked(5032u32);
+        assert_eq!(&vec![M, M, M, M, M, X, X, X, I, I], r.numerals());
+        assert_eq!(5032, *r);
+    }
+
+    #[test]
     fn parse_str() {
         use self::Numeral::*;
 

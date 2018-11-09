@@ -4,10 +4,14 @@ use std::result;
 
 pub type Result<T> = result::Result<T, Error>;
 
+/// Error for Roman Numeral parsing
 #[derive(Debug)]
 pub enum Error {
+    /// A char that is not a valid roman numeral
     InvalidDigit(char),
-    InvalidNumber(u64),
+    /// A number that cannot be converted to a single Roman Numeral
+    InvalidNumber(u32),
+    /// Value is out of range
     OutOfRange(u32),
 }
 
