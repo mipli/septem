@@ -69,6 +69,32 @@ impl Numeral {
             _ => Err(Error::InvalidDigit(c))
         }
     }
+
+    pub fn to_lowercase(&self) -> char {
+        use self::Numeral::*;
+        match *self {
+            I => 'i',
+            V => 'v',
+            X => 'x',
+            L => 'l',
+            C => 'c',
+            D => 'd',
+            M => 'm'
+        }
+    }
+
+    pub fn to_uppercase(&self) -> char {
+        use self::Numeral::*;
+        match *self {
+            I => 'I',
+            V => 'V',
+            X => 'X',
+            L => 'L',
+            C => 'C',
+            D => 'D',
+            M => 'M'
+        }
+    }
 }
 
 unsafe impl Send for Numeral {}
@@ -84,16 +110,7 @@ impl From<Numeral> for u32 {
 impl From<&Numeral> for char {
     /// Converts from &Numeral to char
     fn from(numeral: &Numeral) -> char {
-        use self::Numeral::*;
-        match *numeral {
-            I => 'I',
-            V => 'V',
-            X => 'X',
-            L => 'L',
-            C => 'C',
-            D => 'D',
-            M => 'M'
-        }
+        numeral.to_uppercase()
     }
 }
 

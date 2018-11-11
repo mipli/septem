@@ -1,5 +1,4 @@
 use std::fmt::{Display, Formatter, Result as FmtResult};
-use std::cmp::{Ordering};
 use std::{ops, str};
 
 use crate::{Numeral, Result, Error};
@@ -7,11 +6,8 @@ use crate::{Numeral, Result, Error};
 /// A Roman number
 ///
 /// Stores the value internally as a vector of Roman Numerals, and as a u32, to optimize usage.
-#[derive(Debug, Clone)]
-pub struct Roman {
-    numerals: Vec<Numeral>,
-    value: u32
-}
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Roman(u32);
 
 impl Roman {
     /// Creates a Roman numeral for any value that implements `Into<u32>`. Requires value to be
@@ -32,7 +28,7 @@ impl Roman {
         if val == 0 || val > 3999 {
             return Err(Error::OutOfRange(val));
         }
-        Ok(Roman::from_unchecked(val))
+        Ok(Roman(val))
     }
 
     /// Creates a Roman numeral for any value that implements `Into<u32>`. Does not to any range
@@ -49,12 +45,24 @@ impl Roman {
     ///
     /// Returns `Roman`
     pub fn from_unchecked<T: Into<u32>>(val: T) -> Self {
-        let val = val.into();
+        Roman(val.into())
+    }
+
+    /// Returns lowercase string representation of the Roman numeral
+    pub fn to_lowercase(&self) -> String {
+        self.to_numerals().iter().map(Numeral::to_lowercase).collect()
+    }
+
+    /// Returns uppercase string representation of the Roman numeral
+    pub fn to_uppercase(&self) -> String {
+        self.to_numerals().iter().map(Numeral::to_uppercase).collect()
+    }
+
+    /// Returns vector of numerals representing the roman numeral
+    pub fn to_numerals(&self) -> Vec<Numeral> {
+        let val = self.0;
         if val == 0 {
-            return Roman {
-                value: 0,
-                numerals: vec![]
-            };
+            return vec![];
         }
         let mut num = val;
         let numerals = [Numeral::M, Numeral::C, Numeral::X, Numeral::I]
@@ -63,19 +71,17 @@ impl Roman {
                 let num_step: u32 = step.into();
                 if num >= num_step {
                     let current = num - (num % num_step);
-                    acc.extend(Roman::partial_convert(current, step));
+                    self.partial_convert(current, step).into_iter().rev().for_each(|n| {
+                        acc.push(n);
+                    });
                     num -= current;
                 }
                 acc
             });
-
-        Roman {
-            value: val,
-            numerals
-        }
+        numerals
     }
 
-    fn partial_convert(mut num: u32, base: Numeral) -> Vec<Numeral> {
+    fn partial_convert(&self, mut num: u32, base: Numeral) -> Vec<Numeral> {
         let mut numerals = vec![];
         let step: u32 = base.into();
 
@@ -100,25 +106,8 @@ impl Roman {
                 }
             }
         }
-        numerals.reverse();
         numerals
     }
-
-    /// Returns lowercase string representation of the Roman numeral
-    pub fn to_lowercase(&self) -> String {
-        self.to_string().to_lowercase()
-    }
-
-    /// Returns the vector of Numerals representing the Roman numeral
-    pub fn numerals(&self) -> &Vec<Numeral> {
-        &self.numerals
-    }
-
-    /// Returns an iterator over the Numerals representing the Roman numeral
-    pub fn iter(&self) -> impl Iterator<Item = &Numeral> {
-        self.numerals.iter()
-    }
-
 }
 
 unsafe impl Send for Roman {}
@@ -129,7 +118,7 @@ impl ops::Deref for Roman {
 
     /// Returns the integer representation of the Roman numeral
     fn deref(&self) -> &u32 {
-        &self.value
+        &self.0
     }
 }
 
@@ -151,13 +140,11 @@ impl str::FromStr for Roman {
     fn from_str(s: &str) -> std::result::Result<Self, Error> {
         use std::cmp::Ordering::{Equal, Less, Greater};
         struct Accumulator {
-            numerals: Vec<Numeral>,
             val: u32,
             prev: Option<u32>
         }
-        let mut acc = s.chars().try_fold(Accumulator { numerals: vec![], val: 0, prev: None }, |mut acc, c| {
+        let mut acc = s.chars().try_fold(Accumulator { val: 0, prev: None }, |mut acc, c| {
             let numeral = Numeral::from_char(c)?;
-            acc.numerals.push(numeral);
             let current = *numeral;
             if acc.prev.is_none() {
                 acc.prev = Some(current);
@@ -182,32 +169,12 @@ impl str::FromStr for Roman {
         if let Some(prev) = acc.prev {
             acc.val += prev;
         }
-
-        Ok(Roman {
-            numerals: acc.numerals,
-            value: acc.val
-        })
+        Ok(Roman(acc.val))
     }
 }
 
 impl Display for Roman {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        let nums = self.numerals
-            .iter()
-            .map(|n| char::from(n))
-            .collect::<String>();
-        write!(f, "{}", nums)
-    }
-}
-
-impl PartialEq for Roman {
-    fn eq(&self, other: &Roman) -> bool {
-        self.value == other.value
-    }
-}
-
-impl PartialOrd for Roman {
-    fn partial_cmp(&self, other: &Roman) -> Option<Ordering> {
-        Some(self.value.cmp(&other.value))
+        f.write_str(&self.to_uppercase())
     }
 }
