@@ -1,11 +1,11 @@
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::{ops, str};
 
-use crate::{Numeral, Result, Error};
+use crate::{Digit, Result, Error};
 
 /// A Roman number
 ///
-/// Stores the value internally as a vector of Roman Numerals, and as a u32, to optimize usage.
+/// Stores the value internally a u32
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Roman(u32);
 
@@ -50,22 +50,22 @@ impl Roman {
 
     /// Returns lowercase string representation of the Roman numeral
     pub fn to_lowercase(self) -> String {
-        self.to_numerals().into_iter().map(Numeral::to_lowercase).collect()
+        self.to_digits().into_iter().map(Digit::to_lowercase).collect()
     }
 
     /// Returns uppercase string representation of the Roman numeral
     pub fn to_uppercase(self) -> String {
-        self.to_numerals().into_iter().map(Numeral::to_uppercase).collect()
+        self.to_digits().into_iter().map(Digit::to_uppercase).collect()
     }
 
-    /// Returns vector of numerals representing the roman numeral
-    pub fn to_numerals(self) -> Vec<Numeral> {
+    /// Returns vector of digits representing the roman numeral
+    pub fn to_digits(self) -> Vec<Digit> {
         let val = self.0;
         if val == 0 {
             return vec![];
         }
         let mut num = val;
-        [Numeral::M, Numeral::C, Numeral::X, Numeral::I]
+        [Digit::M, Digit::C, Digit::X, Digit::I]
             .iter()
             .fold(vec![], |mut acc, &step| {
                 let num_step: u32 = step.into();
@@ -80,32 +80,32 @@ impl Roman {
             })
     }
 
-    fn partial_convert(self, mut num: u32, base: Numeral) -> Vec<Numeral> {
-        let mut numerals = vec![];
+    fn partial_convert(self, mut num: u32, base: Digit) -> Vec<Digit> {
+        let mut digits = vec![];
         let step: u32 = base.into();
 
         while num > 0 {
-            match Numeral::from_int(num) {
+            match Digit::from_int(num) {
                 Ok(n) => {
-                    numerals.push(n);
+                    digits.push(n);
                     num = 0;
                 },
                 Err(_) => {
-                    match Numeral::from_int(num + step) {
+                    match Digit::from_int(num + step) {
                         Ok(n) => {
-                            numerals.push(n);
-                            numerals.push(base);
+                            digits.push(n);
+                            digits.push(base);
                             num = 0;
                         },
                         Err(_) => {
-                            numerals.push(base);
+                            digits.push(base);
                             num -= step;
                         }
                     }
                 }
             }
         }
-        numerals
+        digits
     }
 }
 
@@ -143,8 +143,8 @@ impl str::FromStr for Roman {
             prev: Option<u32>
         }
         let mut acc = s.chars().try_fold(Accumulator { val: 0, prev: None }, |mut acc, c| {
-            let numeral = Numeral::from_char(c)?;
-            let current = *numeral;
+            let digit = Digit::from_char(c)?;
+            let current = *digit;
             if acc.prev.is_none() {
                 acc.prev = Some(current);
                 return Ok(acc);

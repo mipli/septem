@@ -2,9 +2,9 @@ use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::ops;
 use crate::{Result, Error};
 
-/// Representation of a roman numeral
+/// Representation of a roman digit
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Numeral {
+pub enum Digit {
     I,
     V,
     X,
@@ -14,22 +14,22 @@ pub enum Numeral {
     M
 }
 
-impl Numeral {
-    /// Tries to converts a value that implements `Into<u32>` into a single roman numeral
+impl Digit {
+    /// Tries to converts a value that implements `Into<u32>` into a single roman digit
     ///
     /// # Examples
     /// ```rust
     /// # use septem::prelude::*;
     /// # use septem::*;
     ///
-    /// let v: Numeral = Numeral::from_int(5u8).unwrap();
-    /// assert_eq!(Numeral::V, v);
+    /// let v: Digit = Digit::from_int(5u8).unwrap();
+    /// assert_eq!(Digit::V, v);
     /// ```
     ///
-    /// Returns `Numeral` , or an `septem::Error`
-    pub fn from_int<T: Into<u32>>(num: T) -> Result<Numeral> {
+    /// Returns `Digit` , or an `septem::Error`
+    pub fn from_int<T: Into<u32>>(num: T) -> Result<Digit> {
         let num: u32 = num.into();
-        use self::Numeral::*;
+        use self::Digit::*;
         match num {
             1 => Ok(I),
             5 => Ok(V),
@@ -43,21 +43,21 @@ impl Numeral {
     }
 }
 
-impl Numeral {
-    /// Tries to converts a char into a single roman numeral
+impl Digit {
+    /// Tries to converts a char into a single roman digit
     ///
     /// # Examples
     /// ```rust
     /// # use septem::prelude::*;
     /// # use septem::*;
     ///
-    /// let v: Numeral = Numeral::from_char('v').unwrap();
-    /// assert_eq!(Numeral::V, v);
+    /// let v: Digit = Digit::from_char('v').unwrap();
+    /// assert_eq!(Digit::V, v);
     /// ```
     ///
-    /// Returns `Numeral` , or an `septem::Error`
-    pub fn from_char(c: char) -> Result<Numeral> {
-        use self::Numeral::*;
+    /// Returns `Digit` , or an `septem::Error`
+    pub fn from_char(c: char) -> Result<Digit> {
+        use self::Digit::*;
         match c.to_uppercase().next() {
             Some('I') => Ok(I),
             Some('V') => Ok(V),
@@ -71,7 +71,7 @@ impl Numeral {
     }
 
     pub fn to_lowercase(self) -> char {
-        use self::Numeral::*;
+        use self::Digit::*;
         match self {
             I => 'i',
             V => 'v',
@@ -84,7 +84,7 @@ impl Numeral {
     }
 
     pub fn to_uppercase(self) -> char {
-        use self::Numeral::*;
+        use self::Digit::*;
         match self {
             I => 'I',
             V => 'V',
@@ -97,35 +97,35 @@ impl Numeral {
     }
 }
 
-unsafe impl Send for Numeral {}
-unsafe impl Sync for Numeral {}
+unsafe impl Send for Digit {}
+unsafe impl Sync for Digit {}
 
-impl From<Numeral> for u32 {
-    /// Converts from Numeral to u32
-    fn from(numeral: Numeral) -> u32 {
-        *numeral
+impl From<Digit> for u32 {
+    /// Converts from Digit to u32
+    fn from(digit: Digit) -> u32 {
+        *digit
     }
 }
 
-impl From<&Numeral> for char {
-    /// Converts from &Numeral to char
-    fn from(numeral: &Numeral) -> char {
-        numeral.to_uppercase()
+impl From<&Digit> for char {
+    /// Converts from &Digit to char
+    fn from(digit: &Digit) -> char {
+        digit.to_uppercase()
     }
 }
 
-impl Display for Numeral {
+impl Display for Digit {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
         write!(f, "{}", char::from(self))
     }
 }
 
-impl ops::Deref for Numeral {
+impl ops::Deref for Digit {
     type Target = u32;
 
-    /// Returns from &Numeral to u32
+    /// Returns from &Digit to u32
     fn deref(&self) -> &u32 {
-        use self::Numeral::*;
+        use self::Digit::*;
         match *self {
             I => &1,
             V => &5,

@@ -15,7 +15,7 @@
 //! ```
 
 mod errors;
-mod numeral;
+mod digit;
 mod roman;
 
 pub mod prelude {
@@ -23,7 +23,7 @@ pub mod prelude {
 }
 
 pub use crate::{
-    numeral::{Numeral},
+    digit::{Digit},
     roman::{Roman},
     errors::{Result, Error}
 };

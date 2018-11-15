@@ -1,17 +1,17 @@
 #[cfg(test)]
 mod tests {
-    use septem::{Numeral, Error};
+    use septem::{Digit, Error};
 
     #[test]
     fn from_int_valid() {
-        let n = Numeral::from_int(5u8);
+        let n = Digit::from_int(5u8);
         assert!(n.is_ok());
-        assert_eq!(Numeral::V, n.unwrap());
+        assert_eq!(Digit::V, n.unwrap());
     }
 
     #[test]
     fn from_int_invalid() {
-        match Numeral::from_int(3u32) {
+        match Digit::from_int(3u32) {
             Err(Error::InvalidNumber(num)) => assert_eq!(3, num),
             _ => assert!(false)
         }
@@ -19,12 +19,12 @@ mod tests {
 
     #[test]
     fn to_int() {
-        let i: u32 = Numeral::V.into();
+        let i: u32 = Digit::V.into();
         assert_eq!(5u32, i);
     }
 
     #[test]
-    fn numeral_display() {
-        assert_eq!('V', (&Numeral::V).into());
+    fn digit_display() {
+        assert_eq!('V', (&Digit::V).into());
     }
 }

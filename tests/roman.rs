@@ -49,12 +49,12 @@ mod tests {
     }
 
     #[test]
-    fn to_numerals() {
-        use septem::Numeral::*;
+    fn to_digits() {
+        use septem::Digit::*;
         let r = Roman::from(532u32);
         assert!(r.is_ok());
         let r = r.unwrap();
-        assert_eq!(vec![D, X, X, X, I, I], r.to_numerals());
+        assert_eq!(vec![D, X, X, X, I, I], r.to_digits());
     }
 
 
