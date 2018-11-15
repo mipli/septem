@@ -70,9 +70,9 @@ impl Numeral {
         }
     }
 
-    pub fn to_lowercase(&self) -> char {
+    pub fn to_lowercase(self) -> char {
         use self::Numeral::*;
-        match *self {
+        match self {
             I => 'i',
             V => 'v',
             X => 'x',
@@ -83,9 +83,9 @@ impl Numeral {
         }
     }
 
-    pub fn to_uppercase(&self) -> char {
+    pub fn to_uppercase(self) -> char {
         use self::Numeral::*;
-        match *self {
+        match self {
             I => 'I',
             V => 'V',
             X => 'X',

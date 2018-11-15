@@ -22,7 +22,7 @@ impl Roman {
     /// assert_eq!("VII", sept.to_string());
     /// ```
     ///
-    /// Returns `Roman` , or an `septem::Error`
+    /// Returns `Roman` , or an `septem::Error
     pub fn from<T: Into<u32>>(val: T) -> Result<Self> {
         let val = val.into();
         if val == 0 || val > 3999 {
@@ -49,23 +49,23 @@ impl Roman {
     }
 
     /// Returns lowercase string representation of the Roman numeral
-    pub fn to_lowercase(&self) -> String {
-        self.to_numerals().iter().map(Numeral::to_lowercase).collect()
+    pub fn to_lowercase(self) -> String {
+        self.to_numerals().into_iter().map(Numeral::to_lowercase).collect()
     }
 
     /// Returns uppercase string representation of the Roman numeral
-    pub fn to_uppercase(&self) -> String {
-        self.to_numerals().iter().map(Numeral::to_uppercase).collect()
+    pub fn to_uppercase(self) -> String {
+        self.to_numerals().into_iter().map(Numeral::to_uppercase).collect()
     }
 
     /// Returns vector of numerals representing the roman numeral
-    pub fn to_numerals(&self) -> Vec<Numeral> {
+    pub fn to_numerals(self) -> Vec<Numeral> {
         let val = self.0;
         if val == 0 {
             return vec![];
         }
         let mut num = val;
-        let numerals = [Numeral::M, Numeral::C, Numeral::X, Numeral::I]
+        [Numeral::M, Numeral::C, Numeral::X, Numeral::I]
             .iter()
             .fold(vec![], |mut acc, &step| {
                 let num_step: u32 = step.into();
@@ -77,11 +77,10 @@ impl Roman {
                     num -= current;
                 }
                 acc
-            });
-        numerals
+            })
     }
 
-    fn partial_convert(&self, mut num: u32, base: Numeral) -> Vec<Numeral> {
+    fn partial_convert(self, mut num: u32, base: Numeral) -> Vec<Numeral> {
         let mut numerals = vec![];
         let step: u32 = base.into();
 
