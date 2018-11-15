@@ -121,6 +121,23 @@ impl ops::Deref for Roman {
     }
 }
 
+/// Support dereferencing to u32
+///
+/// # Examples
+/// ```rust
+/// # use septem::prelude::*;
+/// # use septem::*;
+///
+/// let sept: Roman = Roman::from(7u32).unwrap();
+/// let r: &u32 = &sept;
+/// assert_eq!(&7, r);
+/// ```
+impl AsRef<u32> for Roman {
+    fn as_ref(&self) -> &u32 {
+        &self.0
+    }
+}
+
 impl str::FromStr for Roman {
     type Err = Error;
 
