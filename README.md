@@ -41,6 +41,20 @@ let roman = Roman::from(42).unwrap();
 assert_eq!(42, *roman);
 ```
 
+### Digits
+
+If you need to work with the digits that make up the Roman numeral you can get those with the `to_digits` function.
+```
+let roman = Roman::from(42).unwrap();
+roman.to_digits().iter().for_each(|i| {
+  println!("digit: {}", i);
+});
+```
+
+## Performance
+
+Benchmarks for converting from a Roman numeral in string form to an integer, and the other way around are supplied. Testing against a few other Roman numeral libraries shows that this crate is performing on the same levels, or slightly faster than the alternatives. It is after all very important to have fast roman numeral conversion, can't have such an important part of a program be slow!
+
 
 ### Errors
 
