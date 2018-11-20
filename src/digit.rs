@@ -70,6 +70,32 @@ impl Digit {
         }
     }
 
+    /// Tries to converts a byte into a single roman digit
+    ///
+    /// # Examples
+    /// ```rust
+    /// # use septem::prelude::*;
+    /// # use septem::*;
+    ///
+    /// let v: Digit = Digit::from_byte(b'v').unwrap();
+    /// assert_eq!(Digit::V, v);
+    /// ```
+    ///
+    /// Returns `Digit` , or an `septem::Error`
+    pub fn from_byte(b: u8) -> Result<Digit> {
+        use self::Digit::*;
+        match b {
+            b'I' | b'i'=> Ok(I),
+            b'V' | b'v'=> Ok(V),
+            b'X' | b'x'=> Ok(X),
+            b'L' | b'l'=> Ok(L),
+            b'C' | b'c'=> Ok(C),
+            b'D' | b'd'=> Ok(D),
+            b'M' | b'm'=> Ok(M),
+            _ => Err(Error::InvalidDigit(b.into()))
+        }
+    }
+
     pub fn to_lowercase(self) -> char {
         use self::Digit::*;
         match self {

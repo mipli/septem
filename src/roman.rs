@@ -159,8 +159,8 @@ impl str::FromStr for Roman {
             val: u32,
             prev: Option<u32>
         }
-        let mut acc = s.chars().try_fold(Accumulator { val: 0, prev: None }, |mut acc, c| {
-            let digit = Digit::from_char(c)?;
+        let mut acc = s.bytes().try_fold(Accumulator { val: 0, prev: None }, |mut acc, c| {
+            let digit = Digit::from_byte(c)?;
             let current = *digit;
             if acc.prev.is_none() {
                 acc.prev = Some(current);
