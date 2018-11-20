@@ -60,52 +60,45 @@ impl Roman {
 
     /// Returns vector of digits representing the roman numeral
     pub fn to_digits(self) -> Vec<Digit> {
+        enum Pair {
+            Single(Digit),
+            Double((Digit, Digit))
+        }
         let val = self.0;
         if val == 0 {
             return vec![];
         }
         let mut num = val;
-        [Digit::M, Digit::C, Digit::X, Digit::I]
-            .iter()
-            .fold(vec![], |mut acc, &step| {
-                let num_step: u32 = step.into();
-                if num >= num_step {
-                    let current = num - (num % num_step);
-                    self.partial_convert(current, step).into_iter().rev().for_each(|n| {
-                        acc.push(n);
-                    });
-                    num -= current;
-                }
-                acc
-            })
-    }
+        let pairs = [
+            (1000, Pair::Single(Digit::M)),
+            (900,  Pair::Double((Digit::C, Digit::M))),
+            (500,  Pair::Single(Digit::D)),
+            (400,  Pair::Double((Digit::C, Digit::D))),
+            (100,  Pair::Single(Digit::C)),
+            (90,   Pair::Double((Digit::X, Digit::C))),
+            (50,   Pair::Single(Digit::L)),
+            (40,   Pair::Double((Digit::X, Digit::L))),
+            (10,   Pair::Single(Digit::X)),
+            (9,    Pair::Double((Digit::I, Digit::X))),
+            (5,    Pair::Single(Digit::V)),
+            (4,    Pair::Double((Digit::I, Digit::V))),
+            (1,    Pair::Single(Digit::I))
+        ];
 
-    fn partial_convert(self, mut num: u32, base: Digit) -> Vec<Digit> {
-        let mut digits = vec![];
-        let step: u32 = base.into();
-
-        while num > 0 {
-            match Digit::from_int(num) {
-                Ok(n) => {
-                    digits.push(n);
-                    num = 0;
-                },
-                Err(_) => {
-                    match Digit::from_int(num + step) {
-                        Ok(n) => {
-                            digits.push(n);
-                            digits.push(base);
-                            num = 0;
-                        },
-                        Err(_) => {
-                            digits.push(base);
-                            num -= step;
-                        }
+        let mut acc = vec![];
+        for (val, pair) in pairs.iter() {
+            while num >= *val {
+                match pair {
+                    Pair::Single(s) => acc.push(*s),
+                    Pair::Double((a, b)) => {
+                        acc.push(*a);
+                        acc.push(*b);
                     }
                 }
+                num -= val;
             }
         }
-        digits
+        acc
     }
 }
 
