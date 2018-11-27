@@ -5,13 +5,22 @@
 //!
 //! # Examples
 //! ```rust
-//! use septem::prelude::*;
-//! use septem::*;
+//! use septem::{Roman};
 //!
 //! let sept: Roman = "vii".parse().unwrap();
 //! assert_eq!(7, *sept);
 //! assert_eq!("VII", sept.to_string());
 //! assert_eq!("vii", sept.to_lowercase());
+//! ```
+//!
+//! The `prelude` include is required to support from `std::str::{FromStr}` trait and the
+//! `Roman::from_str` function.
+//!
+//! ```rust
+//! use septem::prelude::*;
+//! use septem::{Roman};
+//! let roman = Roman::from_str("dxxxii").unwrap();
+//! assert_eq!(532, *roman);
 //! ```
 
 mod errors;
