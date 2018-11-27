@@ -3,6 +3,8 @@
 //! A library for working with roman numerals. Converting at will between strings, integers and roman
 //! numerals.
 //!
+//! **Written using the 2018 edition of Rust, so requires _beta_ or _nightly_.**
+//!
 //! # Examples
 //! ```rust
 //! use septem::{Roman};

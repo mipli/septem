@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.com/mipli/septem.svg?branch=master)](https://travis-ci.com/mipli/septem)
+[![Crate](https://img.shields.io/crates/v/septem.svg)](https://crates.io/crates/septem)
+[![API](https://docs.rs/septem/badge.svg)](https://docs.rs/septem)
+
 # Septem
 
 A library for parsing and working with Roman numerals.

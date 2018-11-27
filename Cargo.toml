@@ -9,3 +9,6 @@ repository = "https://github.com/mipli/septem"
 documentation = "https://docs.rs/septem/latest/septem/"
 readme = "README.md"
 keywords = ["roman", "numeral", "septem"]
+
+[badges]
+travis-ci = { repository = "mipli/septem" }
