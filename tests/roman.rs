@@ -1,7 +1,8 @@
 #[cfg(test)]
 mod tests {
-    use septem::prelude::*;
-    use septem::{Roman, Error};
+    extern crate septem;
+    use self::septem::prelude::*;
+    use self::septem::{Roman, Error};
 
     #[test]
     fn from_valid() {
@@ -50,7 +51,7 @@ mod tests {
 
     #[test]
     fn to_digits() {
-        use septem::Digit::*;
+        use self::septem::Digit::*;
         let r = Roman::from(532u32);
         assert!(r.is_ok());
         let r = r.unwrap();

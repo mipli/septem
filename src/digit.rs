@@ -133,9 +133,9 @@ impl From<Digit> for u32 {
     }
 }
 
-impl From<&Digit> for char {
+impl<'a> From<&'a Digit> for char {
     /// Converts from &Digit to char
-    fn from(digit: &Digit) -> char {
+    fn from(digit: &'a Digit) -> char {
         digit.to_uppercase()
     }
 }

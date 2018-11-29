@@ -3,10 +3,9 @@
 //! A library for working with roman numerals. Converting at will between strings, integers and roman
 //! numerals.
 //!
-//! **Written using the 2018 edition of Rust, so requires _beta_ or _nightly_.**
-//!
 //! # Examples
 //! ```rust
+//! extern crate septem;
 //! use septem::{Roman};
 //!
 //! let sept: Roman = "vii".parse().unwrap();
@@ -19,8 +18,10 @@
 //! `Roman::from_str` function.
 //!
 //! ```rust
+//! extern crate septem;
 //! use septem::prelude::*;
 //! use septem::{Roman};
+//!
 //! let roman = Roman::from_str("dxxxii").unwrap();
 //! assert_eq!(532, *roman);
 //! ```

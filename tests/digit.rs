@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests {
-    use septem::{Digit, Error};
+    extern crate septem;
+    use self::septem::{Digit, Error};
 
     #[test]
     fn from_int_valid() {

@@ -8,12 +8,11 @@ A library for parsing and working with Roman numerals.
 
 Supports easy conversion from strings or numbers to roman numerals, and easy conversion back again.
 
-**Written using the 2018 edition of Rust, so requires _beta_ or _nightly_.**
-
 
 ## Usage
 
 ```
+extern crate septem;
 use septem::{Roman};
 
 let sept: Roman = "vii".parse().unwrap();
@@ -24,8 +23,10 @@ assert_eq!("vii", sept.to_lowercase());
 
 The `use septem::prelude::*` is required to support the `std::str::{FromStr}` trait and the `Roman::from_str` function.
 ```
+extern crate septem;
 use septem::prelude::*;
 use septem::{Roman};
+
 let roman = Roman::from_str("dxxxii").unwrap();
 assert_eq!(532, *roman);
 ```
