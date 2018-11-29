@@ -11,7 +11,7 @@ Supports easy conversion from strings or numbers to roman numerals, and easy con
 
 ## Usage
 
-```
+```rust
 extern crate septem;
 use septem::{Roman};
 
@@ -22,7 +22,7 @@ assert_eq!("vii", sept.to_lowercase());
 ```
 
 The `use septem::prelude::*` is required to support the `std::str::{FromStr}` trait and the `Roman::from_str` function.
-```
+```rust
 extern crate septem;
 use septem::prelude::*;
 use septem::{Roman};
@@ -35,13 +35,13 @@ assert_eq!(532, *roman);
 
 Parsing from string is provided using Rust's `FromStr` trait.
 
-```
+```rust
 let num: Roman = "XLII".parse().unwrap();
 ```
 
 Parsing from an integer is done using `Roman::from`.
 
-```
+```rust
 let num: Roman = Roman::from(42).unwrap();
 ```
 
@@ -49,18 +49,18 @@ let num: Roman = Roman::from(42).unwrap();
 
 A string representation of the roman numeral can be gotten using Rust's `Display` trait.
 
-```
+```rust
 println!("Roman number: {}", Roman::from(42).unwrap());
 ```
 There are also functions to get the string without going through the formatter; `to_string`, `to_lowercase` and `to_uppercase`. 
 
-```
+```rust
 let dis = Roman::from(42).unwrap().to_string();
 ```
 
 The numerical value of the roman numeral is available through Rust's `Deref` trait.
 
-```
+```rust
 let roman = Roman::from(42).unwrap();
 assert_eq!(42, *roman);
 ```
@@ -68,7 +68,7 @@ assert_eq!(42, *roman);
 ### Digits
 
 If you need to work with the digits that make up the Roman numeral you can get those with the `to_digits` function.
-```
+```rust
 let roman = Roman::from(42).unwrap();
 roman.to_digits().iter().for_each(|i| {
   println!("digit: {}", i);
