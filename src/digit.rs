@@ -1,6 +1,6 @@
+use crate::{Error, Result};
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::ops;
-use crate::{Result, Error};
 
 /// Representation of a roman digit
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -11,7 +11,7 @@ pub enum Digit {
     L,
     C,
     D,
-    M
+    M,
 }
 
 impl Digit {
@@ -38,7 +38,7 @@ impl Digit {
             100 => Ok(C),
             500 => Ok(D),
             1000 => Ok(M),
-            _ => Err(Error::InvalidNumber(num))
+            _ => Err(Error::InvalidNumber(num)),
         }
     }
 }
@@ -66,7 +66,7 @@ impl Digit {
             Some('C') => Ok(C),
             Some('D') => Ok(D),
             Some('M') => Ok(M),
-            _ => Err(Error::InvalidDigit(c))
+            _ => Err(Error::InvalidDigit(c)),
         }
     }
 
@@ -85,14 +85,14 @@ impl Digit {
     pub fn from_byte(b: u8) -> Result<Digit> {
         use self::Digit::*;
         match b {
-            b'I' | b'i'=> Ok(I),
-            b'V' | b'v'=> Ok(V),
-            b'X' | b'x'=> Ok(X),
-            b'L' | b'l'=> Ok(L),
-            b'C' | b'c'=> Ok(C),
-            b'D' | b'd'=> Ok(D),
-            b'M' | b'm'=> Ok(M),
-            _ => Err(Error::InvalidDigit(b.into()))
+            b'I' | b'i' => Ok(I),
+            b'V' | b'v' => Ok(V),
+            b'X' | b'x' => Ok(X),
+            b'L' | b'l' => Ok(L),
+            b'C' | b'c' => Ok(C),
+            b'D' | b'd' => Ok(D),
+            b'M' | b'm' => Ok(M),
+            _ => Err(Error::InvalidDigit(b.into())),
         }
     }
 
@@ -105,7 +105,7 @@ impl Digit {
             L => 'l',
             C => 'c',
             D => 'd',
-            M => 'm'
+            M => 'm',
         }
     }
 
@@ -118,7 +118,7 @@ impl Digit {
             L => 'L',
             C => 'C',
             D => 'D',
-            M => 'M'
+            M => 'M',
         }
     }
 }
@@ -159,7 +159,7 @@ impl ops::Deref for Digit {
             L => &50,
             C => &100,
             D => &500,
-            M => &1000
+            M => &1000,
         }
     }
 }

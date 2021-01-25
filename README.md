@@ -79,6 +79,11 @@ roman.to_digits().iter().for_each(|i| {
 
 Benchmarks for converting from a Roman numeral in string form to an integer, and the other way around are supplied. Testing against a few other Roman numeral libraries shows that this crate is performing on the same levels, or slightly faster than the alternatives. It is after all very important to have fast roman numeral conversion, can't have such an important part of a program be slow!
 
+The benchmarks cannot be run on stable Rust at the moment, so they should be run with the following command:
+```
+$ cargo +nightly bench
+```
+
 
 ### Errors
 

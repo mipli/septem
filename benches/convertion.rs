@@ -1,10 +1,10 @@
-#![feature(test)] 
+#![feature(test)]
 #[cfg(test)]
-mod tests {
+mod benches {
     extern crate test;
 
-    use self::test::{black_box, Bencher};
     use septem::Roman;
+    use test::{black_box, Bencher};
 
     #[bench]
     fn convert_mmmdcccxciii(b: &mut Bencher) {

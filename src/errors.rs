@@ -18,12 +18,11 @@ pub enum Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use self::Error::*;
-        use std::error::Error;
 
         match *self {
-            InvalidDigit(digit) => write!(f, "{}: {}", self.description(), digit),
-            InvalidNumber(number) => write!(f, "{}: {}", self.description(), number),
-            OutOfRange(value) => write!(f, "{}: {}", self.description(), value),
+            InvalidDigit(digit) => write!(f, "{}: {}", self, digit),
+            InvalidNumber(number) => write!(f, "{}: {}", self, number),
+            OutOfRange(value) => write!(f, "{}: {}", self, value),
         }
     }
 }

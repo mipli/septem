@@ -26,16 +26,16 @@
 //! assert_eq!(532, *roman);
 //! ```
 
-mod errors;
 mod digit;
+mod errors;
 mod roman;
 
 pub mod prelude {
-    pub use std::str::{FromStr};
+    pub use std::str::FromStr;
 }
 
 pub use crate::{
-    digit::{Digit},
-    roman::{Roman},
-    errors::{Result, Error}
+    digit::Digit,
+    errors::{Error, Result},
+    roman::Roman,
 };

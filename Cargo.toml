@@ -2,7 +2,7 @@
 name = "septem"
 version = "1.0.1"
 authors = ["Michael A. Plikk <michael@plikk.com>"]
-# edition = "2018"
+edition = "2018"
 license = "MIT"
 description = "A library for parsing and working with Roman numerals"
 repository = "https://github.com/mipli/septem"
