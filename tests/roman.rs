@@ -2,7 +2,7 @@
 mod tests {
     extern crate septem;
     use self::septem::prelude::*;
-    use self::septem::{Roman, Error};
+    use self::septem::{Error, Roman};
 
     #[test]
     fn from_valid() {
@@ -37,7 +37,7 @@ mod tests {
     fn from_str_invalid() {
         match Roman::from_str("DXSIX") {
             Err(Error::InvalidDigit(digit)) => assert_eq!('S', digit),
-            _ => assert!(false)
+            _ => assert!(false),
         }
     }
 
@@ -45,7 +45,7 @@ mod tests {
     fn from_int_too_high() {
         match Roman::from(5003u32) {
             Err(Error::OutOfRange(digit)) => assert_eq!(5003, digit),
-            _ => assert!(false)
+            _ => assert!(false),
         }
     }
 
@@ -57,7 +57,6 @@ mod tests {
         let r = r.unwrap();
         assert_eq!(vec![D, X, X, X, I, I], r.to_digits());
     }
-
 
     #[test]
     fn display_roman() {

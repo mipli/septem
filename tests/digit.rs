@@ -14,7 +14,7 @@ mod tests {
     fn from_int_invalid() {
         match Digit::from_int(3u32) {
             Err(Error::InvalidNumber(num)) => assert_eq!(3, num),
-            _ => assert!(false)
+            _ => assert!(false),
         }
     }
 
