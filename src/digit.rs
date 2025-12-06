@@ -41,9 +41,7 @@ impl Digit {
             _ => Err(Error::InvalidNumber(num)),
         }
     }
-}
 
-impl Digit {
     /// Tries to converts a char into a single roman digit
     ///
     /// # Examples

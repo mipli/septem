@@ -6,6 +6,7 @@ pub type Result<T> = result::Result<T, Error>;
 
 /// Error for Roman Numeral parsing
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum Error {
     /// A char that is not a valid roman numeral
     InvalidDigit(char),
@@ -20,9 +21,9 @@ impl fmt::Display for Error {
         use self::Error::*;
 
         match *self {
-            InvalidDigit(digit) => write!(f, "{}: {}", self, digit),
-            InvalidNumber(number) => write!(f, "{}: {}", self, number),
-            OutOfRange(value) => write!(f, "{}: {}", self, value),
+            InvalidDigit(digit) => write!(f, "InvalidDigit: {digit}"),
+            InvalidNumber(number) => write!(f, "InvalidNumber: {number}"),
+            OutOfRange(value) => write!(f, "OutOfRange: {value}"),
         }
     }
 }
