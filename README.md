@@ -5,11 +5,14 @@
 # Septem
 
 A library for parsing and working with Roman numerals.
-
 Supports easy conversion from strings or numbers to roman numerals, and easy conversion back again.
-
+including **Unicode Number Forms** and optional **archaic Roman numerals**.
 
 ## Usage
+
+### Basic Example
+
+Parsing from string is provided using Rust's `FromStr` trait.
 
 ```rust
 extern crate septem;
@@ -19,6 +22,14 @@ let sept: Roman = "vii".parse().unwrap();
 assert_eq!(7, *sept);
 assert_eq!("VII", sept.to_string());
 assert_eq!("vii", sept.to_lowercase());
+
+// unicode
+let sept: Roman = "Ⅶ".parse().unwrap();
+assert_eq!(7, *sept);
+
+// combination with unicode 
+let septendecim: Roman = "XⅦ".parse().unwrap();
+assert_eq!(17, *septendecim);
 ```
 
 The `use septem::prelude::*` is required to support the `std::str::{FromStr}` trait and the `Roman::from_str` function.
@@ -33,29 +44,50 @@ assert_eq!(532, *roman);
 
 ### To Roman Numerals
 
-Parsing from string is provided using Rust's `FromStr` trait.
+Convert integers into Roman numerals using either the `From` or `from_int` method:
 
 ```rust
-let num: Roman = "XLII".parse().unwrap();
-```
+use septem::Roman;
 
-Parsing from an integer is done using `Roman::from`.
-
-```rust
 let num: Roman = Roman::from(42).unwrap();
+println!("{}", num); // "XLII"
 ```
+
+Or directly with digits:
+
+```rust
+use septem::Digit;
+
+let digits = Digit::from_int(1994u32).unwrap();
+assert_eq!(
+    digits,
+    vec![
+        Digit::M, Digit::C, Digit::M, // 1900
+        Digit::X, Digit::C,           // 90
+        Digit::I, Digit::V            // 4
+    ]
+);
+```
+
+---
 
 ### From Roman Numerals
 
-A string representation of the roman numeral can be gotten using Rust's `Display` trait.
+A Roman numeral can be converted back to a number easily:
 
 ```rust
-println!("Roman number: {}", Roman::from(42).unwrap());
+use septem::Roman;
+
+let roman = Roman::from(42).unwrap();
+assert_eq!(42, *roman);
 ```
-There are also functions to get the string without going through the formatter; `to_string`, `to_lowercase` and `to_uppercase`. 
+
+String conversions are handled by `Display`, `to_string`, or `to_lowercase`:
 
 ```rust
-let dis = Roman::from(42).unwrap().to_string();
+let roman = Roman::from(42).unwrap();
+println!("Roman: {}", roman);            // "XLII"
+println!("Lowercase: {}", roman.to_lowercase()); // "xlii"
 ```
 
 The numerical value of the roman numeral is available through Rust's `Deref` trait.
@@ -65,16 +97,67 @@ let roman = Roman::from(42).unwrap();
 assert_eq!(42, *roman);
 ```
 
-### Digits
+---
 
-If you need to work with the digits that make up the Roman numeral you can get those with the `to_digits` function.
+### Unicode Support
+
+`septem` automatically supports **Unicode Number Forms** (U+2160–U+217F):
+
 ```rust
-let roman = Roman::from(42).unwrap();
-roman.to_digits().iter().for_each(|i| {
-  println!("digit: {}", i);
-});
+use septem::Digit;
+
+assert_eq!(Digit::from_char('Ⅷ').unwrap(), vec![Digit::V, Digit::I, Digit::I, Digit::I]);
+assert_eq!(Digit::from_char('ⅳ').unwrap(), vec![Digit::I, Digit::V]);
 ```
 
+---
+
+### Optional Archaic Numerals
+
+Enable ancient forms by turning on the `archaic` feature:
+
+```bash
+cargo add septem --features archaic
+```
+
+These include large-value symbols:
+
+| Character | Value   | Name               |
+| --------- | ------- | ------------------ |
+| ↀ         | 1000    | One Thousand (old) |
+| ↁ         | 5000    | Five Thousand      |
+| ↂ         | 10 000  | Ten Thousand       |
+| ↇ         | 50 000  | Fifty Thousand     |
+| ↈ         | 100 000 | Hundred Thousand   |
+
+Example:
+
+```rust
+#[cfg(feature = "archaic")]
+{
+    use septem::Digit;
+
+    assert_eq!(Digit::from_char('ↀ').unwrap(), vec![Digit::OneThousandOld]);
+    assert_eq!(Digit::from_char('ↁ').unwrap(), vec![Digit::FiveThousand]);
+    assert_eq!(Digit::from_char('ↂ').unwrap(), vec![Digit::TenThousand]);
+    assert_eq!(Digit::from_char('ↇ').unwrap(), vec![Digit::FiftyThousand]);
+    assert_eq!(Digit::from_char('ↈ').unwrap(), vec![Digit::HundredThousand]);
+}
+```
+
+---
+
+### Working with Digits
+
+You can access the component digits of a Roman numeral:
+
+```rust
+let roman = Roman::from(42).unwrap();
+for d in roman.to_digits() {
+    println!("Digit: {}", d);
+}
+
+```
 ## Performance
 
 Benchmarks for converting from a Roman numeral in string form to an integer, and the other way around are supplied. Testing against a few other Roman numeral libraries shows that this crate is performing on the same levels, or slightly faster than the alternatives. It is after all very important to have fast roman numeral conversion, can't have such an important part of a program be slow!

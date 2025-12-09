@@ -12,3 +12,7 @@ keywords = ["roman", "numeral", "septem"]
 
 [badges]
 travis-ci = { repository = "mipli/septem" }
+
+[features]
+default = []
+archaic = []

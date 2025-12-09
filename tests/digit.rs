@@ -7,13 +7,13 @@ mod tests {
     fn from_int_valid() {
         let n = Digit::from_int(5u8);
         assert!(n.is_ok());
-        assert_eq!(Digit::V, n.unwrap());
+        assert_eq!(vec![Digit::V], n.unwrap());
     }
 
     #[test]
     fn from_int_invalid() {
-        match Digit::from_int(3u32) {
-            Err(Error::InvalidNumber(num)) => assert_eq!(3, num),
+        match Digit::from_int(0u32) {
+            Err(Error::InvalidNumber(num)) => assert_eq!(0, num),
             _ => assert!(false),
         }
     }
