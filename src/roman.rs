@@ -186,6 +186,25 @@ impl str::FromStr for Roman {
         if let Some(prev) = acc.prev {
             acc.val += prev;
         }
+        // Enforce the same range invariant as `Roman::from`: 1..=3999. Without
+        // this, `from_str` would build values the constructor forbids (e.g.
+        // `from_str("MMMM") == Ok(4000)` while `from(4000) == Err(OutOfRange)`).
+        if acc.val == 0 || acc.val > 3999 {
+            return Err(Error::OutOfRange(acc.val));
+        }
+        // Enforce the canonical form: the parsed string must round-trip through
+        // `Roman::from(acc.val).to_string()` back to itself (compared
+        // case-insensitively, so lowercase canonical inputs such as "vii" still
+        // parse, matching the existing `from_byte` acceptance). Non-canonical
+        // inputs (e.g. "IIII", "IC", "VV", "XXXX", "MIM", "IIX") are rejected
+        // with `InvalidNumber`, which was previously unreachable from the
+        // parser despite its documented meaning ("could not be parsed as a
+        // single roman numeral"). `from_unchecked` remains the escape hatch for
+        // arbitrary/large values and is untouched.
+        let canonical = Roman::from(acc.val)?.to_string();
+        if canonical != s.to_ascii_uppercase() {
+            return Err(Error::InvalidNumber(acc.val));
+        }
         Ok(Roman(acc.val))
     }
 }
