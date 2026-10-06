@@ -22,7 +22,7 @@ impl Roman {
     /// assert_eq!("VII", sept.to_string());
     /// ```
     ///
-    /// Returns `Roman` , or an `septem::Error
+    /// Returns `Roman` , or an `septem::Error`
     pub fn from<T: Into<u32>>(val: T) -> Result<Self> {
         let val = val.into();
         if val == 0 || val > 3999 {
@@ -66,16 +66,7 @@ impl Roman {
 
     /// Returns vector of digits representing the roman numeral
     pub fn to_digits(self) -> Vec<Digit> {
-        enum Pair {
-            Single(Digit),
-            Double((Digit, Digit)),
-        }
-        let val = self.0;
-        if val == 0 {
-            return vec![];
-        }
-        let mut num = val;
-        let pairs = [
+        const PAIRS: [(u32, Pair); 13] = [
             (1000, Pair::Single(Digit::M)),
             (900, Pair::Double((Digit::C, Digit::M))),
             (500, Pair::Single(Digit::D)),
@@ -91,8 +82,19 @@ impl Roman {
             (1, Pair::Single(Digit::I)),
         ];
 
+        enum Pair {
+            Single(Digit),
+            Double((Digit, Digit)),
+        }
+
+        let Roman(val) = self;
+        if val == 0 {
+            return vec![];
+        }
+
+        let mut num = val;
         let mut acc = vec![];
-        for (val, pair) in pairs.iter() {
+        for (val, pair) in &PAIRS {
             while num >= *val {
                 match pair {
                     Pair::Single(s) => acc.push(*s),
